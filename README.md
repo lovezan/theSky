@@ -29,7 +29,7 @@ theskytrails is a modern, interactive travel blog and country information platfo
 
 ## API Integration
 
-The website uses the [REST Countries API](https://restcountries.com/) to fetch comprehensive country data. This API provides information about:
+The website uses the [REST Countries API](https://www.apicountries.com/countries) to fetch comprehensive country data. This API provides information about:
 
 - Basic country details (name, capital, region, etc.)
 - Population and geographical data
@@ -120,7 +120,7 @@ The website supports both light and dark modes with a seamless transition betwee
 
 1. Clone the repository:
    \`\`\`bash
-   git clone https://github.com/yourusername/theskytrails.git
+   git clone https://github.com/lovezan/theSky.git
    cd theskytrails
    \`\`\`
 
@@ -164,7 +164,7 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 
 ## Acknowledgements
 
-- [REST Countries API](https://restcountries.com/) for providing comprehensive country data
+- [REST Countries API](https://www.apicountries.com/countries) for providing comprehensive country data
 - [Next.js](https://nextjs.org/) for the React framework
 - [Tailwind CSS](https://tailwindcss.com/) for styling
 - [Three.js](https://threejs.org/) for 3D visualization
