@@ -19,6 +19,34 @@ import {
   ArrowLeft,
 } from "lucide-react"
 import { fetchCountryByCode, type Country, generateBlogContent, generateCategory } from "@/lib/api"
+import WeatherWidget from "@/components/weather-widget"
+import CurrencyConverter from "@/components/currency-converter"
+import LanguageTranslator from "@/components/language-translator"
+import TravelPlanner from "@/components/travel-planner"
+import SocialSharing from "@/components/social-sharing"
+
+// Add this function at the top of the file, after the imports
+const getStoredComments = (countryId: string) => {
+  if (typeof window === "undefined") return null
+
+  try {
+    const storedComments = localStorage.getItem(`comments_${countryId}`)
+    return storedComments ? JSON.parse(storedComments) : null
+  } catch (error) {
+    console.error("Error getting stored comments:", error)
+    return null
+  }
+}
+
+const saveComments = (countryId: string, comments: any[]) => {
+  if (typeof window === "undefined") return
+
+  try {
+    localStorage.setItem(`comments_${countryId}`, JSON.stringify(comments))
+  } catch (error) {
+    console.error("Error saving comments:", error)
+  }
+}
 
 export default function BlogPost() {
   const params = useParams()
@@ -30,6 +58,7 @@ export default function BlogPost() {
   const [copied, setCopied] = useState(false)
   const [liked, setLiked] = useState(false)
   const [bookmarked, setBookmarked] = useState(false)
+  const [activeTab, setActiveTab] = useState("overview")
   const [comments, setComments] = useState([
     {
       id: 1,
@@ -48,6 +77,15 @@ export default function BlogPost() {
         "Great insights! I visited last summer and can confirm that the local cuisine is absolutely amazing. Don't miss trying the traditional dishes mentioned in the article.",
     },
   ])
+
+  useEffect(() => {
+    if (id) {
+      const storedComments = getStoredComments(id)
+      if (storedComments) {
+        setComments(storedComments)
+      }
+    }
+  }, [id])
 
   // Fetch country data
   useEffect(() => {
@@ -96,14 +134,21 @@ export default function BlogPost() {
         content: comment,
       }
 
-      setComments([newComment, ...comments])
+      const updatedComments = [newComment, ...comments]
+      setComments(updatedComments)
+
+      // Save comments to localStorage
+      if (id) {
+        saveComments(id, updatedComments)
+      }
+
       form.reset()
     }
   }
 
   if (loading) {
     return (
-      <div className="pt-24 pb-16 min-h-screen flex items-center justify-center">
+      <div className="pt-24 pb-16 min-h-screen flex items-center justify-center bg-black">
         <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-purple-500"></div>
       </div>
     )
@@ -111,7 +156,7 @@ export default function BlogPost() {
 
   if (error || !country) {
     return (
-      <div className="pt-24 pb-16 min-h-screen">
+      <div className="pt-24 pb-16 min-h-screen bg-black">
         <div className="container mx-auto px-4 md:px-6 text-center">
           <h1 className="text-3xl font-bold text-white mb-4">Country not found</h1>
           <p className="text-gray-300 mb-8">The country you're looking for doesn't exist or couldn't be loaded.</p>
@@ -147,7 +192,7 @@ export default function BlogPost() {
   }
 
   return (
-    <div className="pt-24 pb-16 min-h-screen">
+    <div className="pt-24 pb-16 min-h-screen bg-black">
       <div className="container mx-auto px-4 md:px-6">
         {/* Back to blogs link */}
         <div className="mb-8">
@@ -157,140 +202,272 @@ export default function BlogPost() {
           </Link>
         </div>
 
-        {/* Featured Image */}
-        <div className="relative w-full h-[400px] md:h-[500px] rounded-xl overflow-hidden mb-8">
-          <img
-            src={country.flags.png || "/placeholder.svg?height=500&width=1200"}
-            alt={`Flag of ${country.name}`}
-            className="w-full h-full object-contain bg-gray-900"
-          />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent"></div>
+        {/* Featured Image with parallax effect */}
+        <motion.div
+          className="relative w-full h-[400px] md:h-[500px] rounded-xl overflow-hidden mb-8"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+        >
+          <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent z-10"></div>
+
+          <motion.div
+            className="absolute inset-0"
+            initial={{ scale: 1.1 }}
+            animate={{ scale: 1 }}
+            transition={{ duration: 1.5 }}
+          >
+            <img
+              src={country.flags.png || "/placeholder.svg?height=500&width=1200"}
+              alt={`Flag of ${country.name}`}
+              className="w-full h-full object-contain bg-gray-900"
+            />
+          </motion.div>
 
           {/* Category badge */}
-          <div className="absolute top-6 left-6">
+          <div className="absolute top-6 left-6 z-20">
             <span className="px-3 py-1 bg-purple-600/80 backdrop-blur-sm rounded-full text-xs font-medium text-white">
               {post.category.charAt(0).toUpperCase() + post.category.slice(1)}
             </span>
+          </div>
+
+          {/* Title overlay */}
+          <div className="absolute bottom-0 left-0 right-0 p-8 z-20">
+            <motion.h1
+              className="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-4"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.2 }}
+            >
+              {post.title}
+            </motion.h1>
+
+            <motion.div
+              className="flex flex-wrap items-center text-gray-300 gap-4"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.6, delay: 0.4 }}
+            >
+              <div className="flex items-center">
+                <User className="h-4 w-4 mr-2" />
+                <span>{post.author}</span>
+              </div>
+              <div className="flex items-center">
+                <Calendar className="h-4 w-4 mr-2" />
+                <span>{post.date}</span>
+              </div>
+              <div className="flex items-center">
+                <Clock className="h-4 w-4 mr-2" />
+                <span>{post.readTime}</span>
+              </div>
+            </motion.div>
+          </div>
+        </motion.div>
+
+        {/* Tabs navigation */}
+        <div className="mb-8 border-b border-gray-800">
+          <div className="flex overflow-x-auto scrollbar-hide space-x-6">
+            <button
+              onClick={() => setActiveTab("overview")}
+              className={`pb-3 px-1 font-medium transition-colors ${
+                activeTab === "overview" ? "text-white border-b-2 border-purple-500" : "text-gray-400 hover:text-white"
+              }`}
+            >
+              Overview
+            </button>
+            <button
+              onClick={() => setActiveTab("travel-tools")}
+              className={`pb-3 px-1 font-medium transition-colors ${
+                activeTab === "travel-tools"
+                  ? "text-white border-b-2 border-purple-500"
+                  : "text-gray-400 hover:text-white"
+              }`}
+            >
+              Travel Tools
+            </button>
+            <button
+              onClick={() => setActiveTab("planner")}
+              className={`pb-3 px-1 font-medium transition-colors ${
+                activeTab === "planner" ? "text-white border-b-2 border-purple-500" : "text-gray-400 hover:text-white"
+              }`}
+            >
+              Trip Planner
+            </button>
+            <button
+              onClick={() => setActiveTab("comments")}
+              className={`pb-3 px-1 font-medium transition-colors ${
+                activeTab === "comments" ? "text-white border-b-2 border-purple-500" : "text-gray-400 hover:text-white"
+              }`}
+            >
+              Comments ({comments.length})
+            </button>
           </div>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
           {/* Main Content */}
           <div className="lg:col-span-8">
-            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
-              {/* Title and meta */}
-              <h1 className="text-3xl md:text-4xl font-bold text-white mb-4">{post.title}</h1>
-
-              <div className="flex flex-wrap items-center text-gray-400 mb-8">
-                <div className="flex items-center mr-6 mb-2">
-                  <User className="h-4 w-4 mr-2" />
-                  <span>{post.author}</span>
-                </div>
-                <div className="flex items-center mr-6 mb-2">
-                  <Calendar className="h-4 w-4 mr-2" />
-                  <span>{post.date}</span>
-                </div>
-                <div className="flex items-center mb-2">
-                  <Clock className="h-4 w-4 mr-2" />
-                  <span>{post.readTime}</span>
-                </div>
-              </div>
-
-              {/* Social sharing */}
-              <div className="flex items-center space-x-4 mb-8 pb-8 border-b border-gray-800">
-                <button
-                  className="p-2 bg-blue-600/20 text-blue-400 rounded-full hover:bg-blue-600/30 transition-colors"
-                  aria-label="Share on Facebook"
-                >
-                  <Facebook className="h-5 w-5" />
-                </button>
-                <button
-                  className="p-2 bg-cyan-600/20 text-cyan-400 rounded-full hover:bg-cyan-600/30 transition-colors"
-                  aria-label="Share on Twitter"
-                >
-                  <Twitter className="h-5 w-5" />
-                </button>
-                <button
-                  className="p-2 bg-blue-700/20 text-blue-400 rounded-full hover:bg-blue-700/30 transition-colors"
-                  aria-label="Share on LinkedIn"
-                >
-                  <Linkedin className="h-5 w-5" />
-                </button>
-                <button
-                  className="p-2 bg-gray-700/50 text-gray-400 rounded-full hover:bg-gray-700 transition-colors"
-                  onClick={handleCopyLink}
-                  aria-label="Copy link"
-                >
-                  {copied ? <Check className="h-5 w-5 text-green-500" /> : <Copy className="h-5 w-5" />}
-                </button>
-              </div>
-
-              {/* Article content */}
-              <div
-                className="prose prose-invert prose-lg max-w-none mb-12"
-                dangerouslySetInnerHTML={{ __html: post.content }}
-              />
-
-              {/* Tags */}
-              {post.tags && post.tags.length > 0 && (
-                <div className="mb-8">
-                  <h3 className="text-lg font-semibold text-white mb-3">Tags</h3>
-                  <div className="flex flex-wrap gap-2">
-                    {post.tags.map((tag, index) => (
-                      <span key={index} className="px-3 py-1 bg-gray-800 rounded-full text-sm text-gray-300">
-                        {tag}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-              )}
-
-              {/* Article actions */}
-              <div className="flex items-center justify-between py-6 border-t border-b border-gray-800 mb-12">
-                <div className="flex items-center space-x-6">
+            {activeTab === "overview" && (
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6 }}
+                className="space-y-8"
+              >
+                {/* Social sharing */}
+                <div className="flex items-center space-x-4 mb-8 pb-8 border-b border-gray-800">
                   <button
-                    className={`flex items-center space-x-2 ${liked ? "text-red-500" : "text-gray-400 hover:text-red-500"} transition-colors`}
-                    onClick={() => setLiked(!liked)}
+                    className="p-2 bg-blue-600/20 text-blue-400 rounded-full hover:bg-blue-600/30 transition-colors"
+                    aria-label="Share on Facebook"
                   >
-                    <Heart className={`h-5 w-5 ${liked ? "fill-current" : ""}`} />
-                    <span>{liked ? "Liked" : "Like"}</span>
+                    <Facebook className="h-5 w-5" />
                   </button>
-                  <a
-                    href="#comments"
-                    className="flex items-center space-x-2 text-gray-400 hover:text-white transition-colors"
+                  <button
+                    className="p-2 bg-cyan-600/20 text-cyan-400 rounded-full hover:bg-cyan-600/30 transition-colors"
+                    aria-label="Share on Twitter"
                   >
-                    <MessageCircle className="h-5 w-5" />
-                    <span>Comments ({comments.length})</span>
-                  </a>
+                    <Twitter className="h-5 w-5" />
+                  </button>
+                  <button
+                    className="p-2 bg-blue-700/20 text-blue-400 rounded-full hover:bg-blue-700/30 transition-colors"
+                    aria-label="Share on LinkedIn"
+                  >
+                    <Linkedin className="h-5 w-5" />
+                  </button>
+                  <button
+                    className="p-2 bg-gray-700/50 text-gray-400 rounded-full hover:bg-gray-700 transition-colors"
+                    onClick={handleCopyLink}
+                    aria-label="Copy link"
+                  >
+                    {copied ? <Check className="h-5 w-5 text-green-500" /> : <Copy className="h-5 w-5" />}
+                  </button>
                 </div>
-                <button
-                  className={`flex items-center space-x-2 ${bookmarked ? "text-purple-500" : "text-gray-400 hover:text-purple-500"} transition-colors`}
-                  onClick={() => setBookmarked(!bookmarked)}
-                >
-                  <Bookmark className={`h-5 w-5 ${bookmarked ? "fill-current" : ""}`} />
-                  <span>{bookmarked ? "Saved" : "Save"}</span>
-                </button>
-              </div>
 
-              {/* Author bio */}
-              <div className="bg-gray-900/50 backdrop-blur-sm border border-gray-800 rounded-xl p-6 mb-12">
-                <div className="flex flex-col md:flex-row items-center md:items-start gap-6">
-                  <img
-                    src={post.authorAvatar || "/placeholder.svg?height=80&width=80"}
-                    alt={post.author}
-                    className="w-20 h-20 rounded-full object-cover"
-                  />
-                  <div>
-                    <h3 className="text-xl font-bold text-white mb-1">{post.author}</h3>
-                    <p className="text-purple-400 mb-3">{post.authorTitle}</p>
-                    <p className="text-gray-300">{post.authorBio}</p>
+                {/* Article content */}
+                <div
+                  className="prose prose-invert prose-lg max-w-none mb-12"
+                  dangerouslySetInnerHTML={{ __html: post.content }}
+                />
+
+                {/* Tags */}
+                {post.tags && post.tags.length > 0 && (
+                  <div className="mb-8">
+                    <h3 className="text-lg font-semibold text-white mb-3">Tags</h3>
+                    <div className="flex flex-wrap gap-2">
+                      {post.tags.map((tag, index) => (
+                        <span key={index} className="px-3 py-1 bg-gray-800 rounded-full text-sm text-gray-300">
+                          {tag}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {/* Article actions */}
+                <div className="flex items-center justify-between py-6 border-t border-b border-gray-800 mb-12">
+                  <div className="flex items-center space-x-6">
+                    <button
+                      className={`flex items-center space-x-2 ${liked ? "text-red-500" : "text-gray-400 hover:text-red-500"} transition-colors`}
+                      onClick={() => setLiked(!liked)}
+                    >
+                      <Heart className={`h-5 w-5 ${liked ? "fill-current" : ""}`} />
+                      <span>{liked ? "Liked" : "Like"}</span>
+                    </button>
+                    <button
+                      onClick={() => setActiveTab("comments")}
+                      className="flex items-center space-x-2 text-gray-400 hover:text-white transition-colors"
+                    >
+                      <MessageCircle className="h-5 w-5" />
+                      <span>Comments ({comments.length})</span>
+                    </button>
+                  </div>
+                  <button
+                    className={`flex items-center space-x-2 ${bookmarked ? "text-purple-500" : "text-gray-400 hover:text-purple-500"} transition-colors`}
+                    onClick={() => setBookmarked(!bookmarked)}
+                  >
+                    <Bookmark className={`h-5 w-5 ${bookmarked ? "fill-current" : ""}`} />
+                    <span>{bookmarked ? "Saved" : "Save"}</span>
+                  </button>
+                </div>
+
+                {/* Author bio */}
+                <div className="bg-gray-900/50 backdrop-blur-sm border border-gray-800 rounded-xl p-6 mb-12">
+                  <div className="flex flex-col md:flex-row items-center md:items-start gap-6">
+                    <img
+                      src={post.authorAvatar || "/placeholder.svg?height=80&width=80"}
+                      alt={post.author}
+                      className="w-20 h-20 rounded-full object-cover"
+                    />
+                    <div>
+                      <h3 className="text-xl font-bold text-white mb-1">{post.author}</h3>
+                      <p className="text-purple-400 mb-3">{post.authorTitle}</p>
+                      <p className="text-gray-300">{post.authorBio}</p>
+                    </div>
                   </div>
                 </div>
-              </div>
+              </motion.div>
+            )}
 
-              {/* Comments section */}
-              <div id="comments" className="scroll-mt-24">
-                <h3 className="text-2xl font-bold text-white mb-6">Comments ({comments.length})</h3>
+            {activeTab === "travel-tools" && (
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6 }}
+                className="space-y-8"
+              >
+                <h2 className="text-2xl font-bold text-white mb-6">Travel Tools for {country.name}</h2>
+
+                {/* Weather widget */}
+                <div className="space-y-2">
+                  <h3 className="text-lg font-medium text-white">Weather Information</h3>
+                  <WeatherWidget
+                    countryName={country.name}
+                    capital={country.capital}
+                    lat={country.latlng[0]}
+                    lng={country.latlng[1]}
+                  />
+                </div>
+
+                {/* Currency converter */}
+                <div className="space-y-2">
+                  <h3 className="text-lg font-medium text-white">Currency Converter</h3>
+                  <CurrencyConverter countryCurrency={country.currencies?.[0]} />
+                </div>
+
+                {/* Language translator */}
+                <div className="space-y-2">
+                  <h3 className="text-lg font-medium text-white">Language Translator</h3>
+                  <LanguageTranslator countryLanguages={country.languages} />
+                </div>
+
+                {/* Social sharing */}
+                <div className="space-y-2">
+                  <h3 className="text-lg font-medium text-white">Share This Guide</h3>
+                  <SocialSharing
+                    title={`Travel Guide to ${country.name}`}
+                    url={window.location.href}
+                    description={`Discover everything you need to know about traveling to ${country.name} with our comprehensive guide.`}
+                  />
+                </div>
+              </motion.div>
+            )}
+
+            {activeTab === "planner" && (
+              <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
+                <h2 className="text-2xl font-bold text-white mb-6">Plan Your Trip to {country.name}</h2>
+                <TravelPlanner countryName={country.name} capital={country.capital} />
+              </motion.div>
+            )}
+
+            {activeTab === "comments" && (
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6 }}
+                id="comments"
+                className="scroll-mt-24"
+              >
+                <h2 className="text-2xl font-bold text-white mb-6">Comments ({comments.length})</h2>
 
                 {/* Comment form */}
                 <div className="bg-gray-900/30 border border-gray-800 rounded-xl p-6 mb-8">
@@ -348,7 +525,13 @@ export default function BlogPost() {
                 {/* Comments list */}
                 <div className="space-y-6">
                   {comments.map((comment) => (
-                    <div key={comment.id} className="bg-gray-900/30 border border-gray-800 rounded-xl p-6">
+                    <motion.div
+                      key={comment.id}
+                      className="bg-gray-900/30 border border-gray-800 rounded-xl p-6"
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.4 }}
+                    >
                       <div className="flex items-start gap-4">
                         <img
                           src={comment.avatar || "/placeholder.svg"}
@@ -363,18 +546,23 @@ export default function BlogPost() {
                           <p className="text-gray-300">{comment.content}</p>
                         </div>
                       </div>
-                    </div>
+                    </motion.div>
                   ))}
                 </div>
-              </div>
-            </motion.div>
+              </motion.div>
+            )}
           </div>
 
           {/* Sidebar */}
           <div className="lg:col-span-4">
-            <div className="sticky top-24">
+            <div className="sticky top-24 space-y-8">
               {/* Country Quick Facts */}
-              <div className="bg-gray-900/30 border border-gray-800 rounded-xl p-6 mb-8">
+              <motion.div
+                className="bg-gray-900/30 border border-gray-800 rounded-xl p-6"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 0.2 }}
+              >
                 <h3 className="text-xl font-bold text-white mb-6">Country Quick Facts</h3>
                 <div className="space-y-4">
                   <div className="flex justify-between">
@@ -408,11 +596,16 @@ export default function BlogPost() {
                     <span className="text-white font-medium">+{country.callingCodes[0]}</span>
                   </div>
                 </div>
-              </div>
+              </motion.div>
 
               {/* Neighboring Countries */}
               {country.borders && country.borders.length > 0 && (
-                <div className="bg-gray-900/30 border border-gray-800 rounded-xl p-6 mb-8">
+                <motion.div
+                  className="bg-gray-900/30 border border-gray-800 rounded-xl p-6"
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.6, delay: 0.3 }}
+                >
                   <h3 className="text-xl font-bold text-white mb-4">Neighboring Countries</h3>
                   <div className="space-y-3">
                     {country.borders.map((border, index) => (
@@ -432,12 +625,25 @@ export default function BlogPost() {
                       </Link>
                     ))}
                   </div>
-                </div>
+                </motion.div>
               )}
+
+              {/* Weather Widget */}
+              <WeatherWidget
+                countryName={country.name}
+                capital={country.capital}
+                lat={country.latlng[0]}
+                lng={country.latlng[1]}
+              />
 
               {/* Tags cloud */}
               {post.tags && post.tags.length > 0 && (
-                <div className="bg-gray-900/30 border border-gray-800 rounded-xl p-6 mb-8">
+                <motion.div
+                  className="bg-gray-900/30 border border-gray-800 rounded-xl p-6"
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.6, delay: 0.4 }}
+                >
                   <h3 className="text-xl font-bold text-white mb-4">Related Topics</h3>
                   <div className="flex flex-wrap gap-2">
                     {post.tags.map((tag, index) => (
@@ -456,11 +662,16 @@ export default function BlogPost() {
                       View All
                     </Link>
                   </div>
-                </div>
+                </motion.div>
               )}
 
               {/* Newsletter signup */}
-              <div className="bg-gradient-to-r from-purple-900/30 to-blue-900/30 backdrop-blur-sm border border-gray-800 rounded-xl p-6">
+              <motion.div
+                className="bg-gradient-to-r from-purple-900/30 to-blue-900/30 backdrop-blur-sm border border-gray-800 rounded-xl p-6"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 0.5 }}
+              >
                 <h3 className="text-xl font-bold text-white mb-3">Subscribe to Our Newsletter</h3>
                 <p className="text-gray-300 mb-4">
                   Get the latest travel guides and country insights delivered to your inbox.
@@ -478,7 +689,7 @@ export default function BlogPost() {
                     Subscribe
                   </button>
                 </form>
-              </div>
+              </motion.div>
             </div>
           </div>
         </div>

@@ -1,4 +1,4 @@
-import Cookies from "js-cookie"
+// Replace the entire file with this updated version that uses localStorage
 
 export interface User {
   id: string
@@ -7,46 +7,62 @@ export interface User {
 }
 
 // Simulated database of users
-let users: Record<string, User & { password: string }> = {}
+const users: Record<string, User & { password: string }> = {
+  user_1: {
+    id: "user_1",
+    name: "John Doe",
+    email: "john@example.com",
+    password: "password123",
+  },
+  user_2: {
+    id: "user_2",
+    name: "Jane Smith",
+    email: "jane@example.com",
+    password: "password123",
+  },
+}
 
-// Cookie name for auth token
-const AUTH_TOKEN_COOKIE = "skytrails_auth_token"
-const TOKEN_EXPIRY_DAYS = 7
+// Local storage keys
+const AUTH_TOKEN_KEY = "skytrails_auth_token"
+const USER_DATA_KEY = "skytrails_user_data"
 
 // Generate a simple token (in a real app, use a proper JWT)
 const generateToken = (userId: string): string => {
   return `token_${userId}_${Date.now()}`
 }
 
-// Store token in HTTP-only cookie
-const setAuthCookie = (token: string): void => {
-  Cookies.set(AUTH_TOKEN_COOKIE, token, {
-    expires: TOKEN_EXPIRY_DAYS,
-    secure: process.env.NODE_ENV === "production",
-    sameSite: "strict",
-  })
+// Store auth data in localStorage
+const setAuthData = (token: string, user: User): void => {
+  if (typeof window !== "undefined") {
+    localStorage.setItem(AUTH_TOKEN_KEY, token)
+    localStorage.setItem(USER_DATA_KEY, JSON.stringify(user))
+  }
 }
 
-// Remove auth cookie
-const removeAuthCookie = (): void => {
-  Cookies.remove(AUTH_TOKEN_COOKIE)
+// Remove auth data from localStorage
+const removeAuthData = (): void => {
+  if (typeof window !== "undefined") {
+    localStorage.removeItem(AUTH_TOKEN_KEY)
+    localStorage.removeItem(USER_DATA_KEY)
+  }
 }
 
-// Get current user from token
+// Get current user from localStorage
 export const getCurrentUser = async (): Promise<User | null> => {
-  const token = Cookies.get(AUTH_TOKEN_COOKIE)
+  if (typeof window === "undefined") return null
 
-  if (!token) return null
+  try {
+    const userData = localStorage.getItem(USER_DATA_KEY)
+    const token = localStorage.getItem(AUTH_TOKEN_KEY)
 
-  // In a real app, you would verify the token with your backend
-  // For this demo, we'll parse our simple token format
-  const parts = token.split("_")
-  if (parts.length !== 3 || parts[0] !== "token") return null
+    if (!userData || !token) return null
 
-  const userId = parts[1]
-  const user = users[userId]
-
-  return user ? { id: user.id, name: user.name, email: user.email } : null
+    // In a real app, you would verify the token with your backend
+    return JSON.parse(userData) as User
+  } catch (error) {
+    console.error("Error getting current user:", error)
+    return null
+  }
 }
 
 // Login user
@@ -61,11 +77,12 @@ export const loginUser = async (email: string, password: string): Promise<User> 
     throw new Error("Invalid email or password")
   }
 
-  // Generate and store token
+  // Generate token and store auth data
   const token = generateToken(user.id)
-  setAuthCookie(token)
+  const userData = { id: user.id, name: user.name, email: user.email }
+  setAuthData(token, userData)
 
-  return { id: user.id, name: user.name, email: user.email }
+  return userData
 }
 
 // Register new user
@@ -85,11 +102,12 @@ export const registerUser = async (name: string, email: string, password: string
   // Store in our "database"
   users[id] = newUser
 
-  // Generate and store token
+  // Generate token and store auth data
   const token = generateToken(id)
-  setAuthCookie(token)
+  const userData = { id: newUser.id, name: newUser.name, email: newUser.email }
+  setAuthData(token, userData)
 
-  return { id, name, email }
+  return userData
 }
 
 // Logout user
@@ -97,21 +115,5 @@ export const logoutUser = async (): Promise<void> => {
   // Simulate API request delay
   await new Promise((resolve) => setTimeout(resolve, 300))
 
-  removeAuthCookie()
-}
-
-// Add some sample users for testing
-users = {
-  user_1: {
-    id: "user_1",
-    name: "John Doe",
-    email: "john@example.com",
-    password: "password123",
-  },
-  user_2: {
-    id: "user_2",
-    name: "Jane Smith",
-    email: "jane@example.com",
-    password: "password123",
-  },
+  removeAuthData()
 }

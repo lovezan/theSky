@@ -19,8 +19,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [isLoading, setIsLoading] = useState(true)
   const router = useRouter()
 
+  // Check if user is already logged in on mount and when localStorage changes
   useEffect(() => {
-    // Check if user is already logged in
     const checkAuth = async () => {
       try {
         const currentUser = await getCurrentUser()
@@ -33,6 +33,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
 
     checkAuth()
+
+    // Listen for storage events (in case user logs in/out in another tab)
+    const handleStorageChange = () => {
+      checkAuth()
+    }
+
+    window.addEventListener("storage", handleStorageChange)
+    return () => {
+      window.removeEventListener("storage", handleStorageChange)
+    }
   }, [])
 
   const login = async (email: string, password: string) => {
