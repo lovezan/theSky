@@ -96,6 +96,8 @@ export default function LoadingAnimation({ onComplete }: { onComplete: () => voi
 
     let animationFrameId: number
     const startTime = Date.now()
+    // Extended animation duration to 5 seconds (5000ms)
+    const animationDuration = 5000
 
     function animate(scale: number) {
       if (!ctx || !canvas) return
@@ -106,10 +108,10 @@ export default function LoadingAnimation({ onComplete }: { onComplete: () => voi
       const { x: mouseX, y: mouseY } = mousePositionRef.current
       const maxDistance = 240
       const elapsedTime = Date.now() - startTime
-      const animationProgress = Math.min(elapsedTime / 2000, 1) // 2 second animation
+      const animationProgress = Math.min(elapsedTime / animationDuration, 1) // 5 second animation
 
-      // After 2 seconds, trigger the completion callback
-      if (elapsedTime >= 2000) {
+      // After animation duration, trigger the completion callback
+      if (elapsedTime >= animationDuration) {
         cancelAnimationFrame(animationFrameId)
         onComplete()
         return
@@ -193,7 +195,7 @@ export default function LoadingAnimation({ onComplete }: { onComplete: () => voi
   }, [isMobile, onComplete])
 
   return (
-    <div className="fixed inset-0 z-50 bg-black">
+    <div className="fixed inset-0 z-50 bg-black dark:bg-black">
       <canvas
         ref={canvasRef}
         className="w-full h-full absolute top-0 left-0 touch-none"

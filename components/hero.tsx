@@ -7,10 +7,10 @@ import Link from "next/link"
 
 export default function Hero() {
   return (
-    <section className="relative min-h-screen pt-16 flex items-center overflow-hidden">
+    <section className="relative min-h-screen pt-16 flex items-center overflow-hidden bg-background">
       {/* Grid background */}
       <div className="absolute inset-0 -z-10">
-        <div className="absolute inset-0 bg-grid-pattern-dark opacity-[0.05]" />
+        <div className="absolute inset-0 bg-grid-pattern-dark dark:bg-grid-pattern-dark opacity-[0.05]" />
       </div>
 
       {/* Star decorations */}
@@ -37,25 +37,25 @@ export default function Hero() {
             className="text-center lg:text-left"
           >
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6">
-              <span className="text-white">Discover the World</span>
+              <span className="text-foreground">Discover the World</span>
               <br />
-              <span className="text-white">with theskytrails</span>
+              <span className="text-foreground">with theskytrails</span>
             </h1>
-            <p className="text-lg text-white/70 max-w-xl mx-auto lg:mx-0 mb-8">
+            <p className="text-lg text-muted-foreground max-w-xl mx-auto lg:mx-0 mb-8">
               Your ultimate travel companion for exploring countries and cultures. Our expert guides and insights help
               you plan unforgettable journeys across the globe.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
               <Link
                 href="/countries"
-                className="px-6 py-3 bg-white text-black rounded-md font-medium hover:bg-white/90 transition-all duration-300 flex items-center justify-center"
+                className="px-6 py-3 bg-primary text-primary-foreground rounded-md font-medium hover:bg-primary/90 transition-all duration-300 flex items-center justify-center"
               >
                 <span>Explore Countries</span>
                 <ArrowRight className="ml-2 h-4 w-4" />
               </Link>
               <Link
                 href="/about"
-                className="px-6 py-3 bg-white/10 text-white border border-white/20 rounded-md font-medium hover:bg-white/15 transition-all duration-300"
+                className="px-6 py-3 bg-secondary text-secondary-foreground border border-border rounded-md font-medium hover:bg-secondary/90 transition-all duration-300"
               >
                 About Us
               </Link>

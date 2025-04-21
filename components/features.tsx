@@ -38,7 +38,7 @@ export default function Features() {
   ]
 
   return (
-    <section className="py-20 bg-muted/30">
+    <section className="py-20 bg-secondary/30">
       <div className="container mx-auto px-4 md:px-6">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -65,10 +65,10 @@ export default function Features() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: index * 0.1 }}
-              className="bg-background/50 backdrop-blur-sm border border-border/40 rounded-xl p-6 hover:shadow-lg hover:shadow-primary/5 transition-all duration-300"
+              className="bg-card backdrop-blur-sm border border-border/40 rounded-xl p-6 hover:shadow-lg hover:shadow-primary/5 transition-all duration-300"
             >
               <div className="text-primary mb-4">{feature.icon}</div>
-              <h3 className="text-xl font-bold mb-2">{feature.title}</h3>
+              <h3 className="text-xl font-bold mb-2 text-foreground">{feature.title}</h3>
               <p className="text-muted-foreground">{feature.description}</p>
             </motion.div>
           ))}
