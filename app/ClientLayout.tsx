@@ -1,5 +1,7 @@
 "use client"
 
+import type React from "react"
+
 import { ThemeProvider } from "@/components/theme-provider"
 import Navbar from "@/components/navbar"
 import FooterMinimal from "@/components/footer-minimal"
