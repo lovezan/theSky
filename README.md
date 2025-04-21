@@ -18,6 +18,19 @@ theskytrails is a modern, interactive travel blog and country information platfo
 - **Responsive Design**: Optimized for all devices from mobile to desktop
 - **Blog Platform**: Read and comment on travel articles and guides
 - **First-visit Animation**: Engaging loading animation for first-time visitors
+- **Weather Widget**: Real-time weather information for each country  
+- **Currency Converter**: Instantly convert between major global currencies  
+- **Language Translator**: Translate basic phrases between local and global languages  
+- **Travel Planner**: Create and manage custom travel itineraries  
+- **User Profile System**: Personalize your experience with user profiles  
+- **Social Sharing Tools**: Share blog posts and countries on social media  
+- **Enhanced Hero Section**: Eye-catching landing visuals with dynamic headlines  
+- **Typewriter Effect**: Animated intro text to engage users  
+- **Interactive Map**: Explore countries and regions with zoomable, clickable maps  
+- 
+- ## Features
+
+
 
 ## Authentication
 
