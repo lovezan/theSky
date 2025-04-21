@@ -33,7 +33,7 @@ export default function BlogPost() {
   const [comments, setComments] = useState([
     {
       id: 1,
-      author: "Jennifer Lee",
+      author: "Asma Naaz",
       avatar: "https://randomuser.me/api/portraits/women/12.jpg",
       date: "2 days ago",
       content:
@@ -41,7 +41,7 @@ export default function BlogPost() {
     },
     {
       id: 2,
-      author: "Robert Chen",
+      author: "Talib Hassan",
       avatar: "https://randomuser.me/api/portraits/men/67.jpg",
       date: "5 days ago",
       content:
