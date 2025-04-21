@@ -223,11 +223,15 @@ The project is configured for easy deployment on Vercel:
 
 ## Future Enhancements
 
-- Saved favorites and trip planning features
-- Multi-language support
-- Interactive maps for each country
-- Travel booking integration
-- User-generated content and reviews
+- **AI-Powered Travel Assistant**: Personalized travel recommendations and itinerary planning using AI  
+- **Voice Search Integration**: Allow users to search countries, blogs, and guides using voice commands  
+- **Smart Recommendations**: AI-based suggestions for destinations, blogs, and travel tips based on user behavior  
+- **Saved Favorites and Trip Planning**: Bookmark countries, save blogs, and create detailed travel plans  
+- **Multi-language Support**: Offer the platform in multiple languages for global accessibility  
+- **Interactive Country Maps**: Zoomable maps with POIs, highlights, and user annotations  
+- **Travel Booking Integration**: Connect with booking services for flights, hotels, and experiences  
+- **User-Generated Content & Reviews**: Allow travelers to share experiences, photos, and ratings  
+
 
 ## License
 
