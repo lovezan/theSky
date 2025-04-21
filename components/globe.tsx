@@ -44,10 +44,10 @@ export default function Globe() {
 
     // Material based on theme
     const material = new THREE.MeshBasicMaterial({
-      color: 0xffffff,
+      color: isDark ? 0xffffff : 0x333333,
       wireframe: true,
       transparent: true,
-      opacity: 0.1,
+      opacity: isDark ? 0.1 : 0.2,
     })
 
     const globe = new THREE.Mesh(geometry, material)
@@ -56,21 +56,21 @@ export default function Globe() {
     // Add glow effect
     const glowGeometry = new THREE.SphereGeometry(1.01, 64, 64)
     const glowMaterial = new THREE.MeshBasicMaterial({
-      color: 0xffffff,
+      color: isDark ? 0xffffff : 0x333333,
       transparent: true,
-      opacity: 0.05,
+      opacity: isDark ? 0.05 : 0.1,
     })
     const glowMesh = new THREE.Mesh(glowGeometry, glowMaterial)
     scene.add(glowMesh)
 
     // Define continent regions with colors
     const continents = [
-      { name: "North America", color: 0x4287f5, lat: [15, 70], lng: [-170, -50], density: 0.3 },
-      { name: "South America", color: 0x42f5a7, lat: [-60, 15], lng: [-80, -30], density: 0.3 },
-      { name: "Europe", color: 0xf542cb, lat: [35, 70], lng: [-10, 40], density: 0.4 },
-      { name: "Africa", color: 0xf5a742, lat: [-40, 35], lng: [-20, 55], density: 0.3 },
-      { name: "Asia", color: 0xf54242, lat: [0, 70], lng: [40, 150], density: 0.3 },
-      { name: "Oceania", color: 0x42f5f2, lat: [-50, 0], lng: [110, 180], density: 0.2 },
+      { name: "North America", color: isDark ? 0x4287f5 : 0x2563eb, lat: [15, 70], lng: [-170, -50], density: 0.3 },
+      { name: "South America", color: isDark ? 0x42f5a7 : 0x10b981, lat: [-60, 15], lng: [-80, -30], density: 0.3 },
+      { name: "Europe", color: isDark ? 0xf542cb : 0xd946ef, lat: [35, 70], lng: [-10, 40], density: 0.4 },
+      { name: "Africa", color: isDark ? 0xf5a742 : 0xf59e0b, lat: [-40, 35], lng: [-20, 55], density: 0.3 },
+      { name: "Asia", color: isDark ? 0xf54242 : 0xef4444, lat: [0, 70], lng: [40, 150], density: 0.3 },
+      { name: "Oceania", color: isDark ? 0x42f5f2 : 0x06b6d4, lat: [-50, 0], lng: [110, 180], density: 0.2 },
     ]
 
     // Add dot particles for countries with continent colors
@@ -107,7 +107,7 @@ export default function Globe() {
     })
 
     // Add some random dots for oceans
-    color.set(0x42a1f5) // Ocean blue
+    color.set(isDark ? 0x42a1f5 : 0x3b82f6) // Ocean blue
     for (let i = 0; i < dotCount * 0.2; i++) {
       const phi = Math.random() * Math.PI * 2
       const theta = Math.random() * Math.PI
@@ -142,7 +142,7 @@ export default function Globe() {
       size: dotSize,
       vertexColors: true,
       transparent: true,
-      opacity: 0.8,
+      opacity: isDark ? 0.8 : 0.9,
     })
 
     const dots = new THREE.Points(dotsGeometry, dotsMaterial)
@@ -212,7 +212,7 @@ export default function Globe() {
         ref={containerRef}
         className="relative w-[350px] h-[350px] md:w-[400px] md:h-[400px] lg:w-[500px] lg:h-[500px] mx-auto animate-float"
       >
-        <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black pointer-events-none"></div>
+        <div className="absolute inset-0 bg-gradient-to-b from-transparent to-background pointer-events-none"></div>
       </div>
     </div>
   )

@@ -18,7 +18,7 @@ export default function Newsletter() {
             <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-primary/10 text-primary mb-4">
               <Mail className="h-6 w-6" />
             </div>
-            <h2 className="text-2xl md:text-3xl font-bold mb-2">Stay Updated</h2>
+            <h2 className="text-2xl md:text-3xl font-bold mb-2 text-foreground">Stay Updated</h2>
             <p className="text-muted-foreground">
               Subscribe to our newsletter for the latest travel insights and country guides.
             </p>
@@ -27,7 +27,7 @@ export default function Newsletter() {
           <form className="flex flex-col sm:flex-row gap-4">
             <input
               type="email"
-              className="flex-1 px-4 py-3 bg-background border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-transparent transition-all duration-200"
+              className="flex-1 px-4 py-3 bg-background border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-transparent transition-all duration-200 text-foreground"
               placeholder="Your email address"
               required
             />
