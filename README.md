@@ -40,11 +40,12 @@ The website uses the [REST Countries API](https://www.apicountries.com/countries
 - And more
 
 The API is integrated with a fallback mechanism to ensure the website functions even if the API is temporarily unavailable.
+# The Sky Trails Project
 
 ## Project Structure
 
-\`\`\`
-theskytrails/
+```bash
+.
 ├── app/                    # Next.js App Router pages
 │   ├── about/              # About page
 │   ├── blogs/              # Blog posts pages
@@ -72,7 +73,6 @@ theskytrails/
 ├── package.json            # Project dependencies
 ├── postcss.config.mjs      # PostCSS configuration
 └── tailwind.config.ts      # Tailwind CSS configuration
-\`\`\`
 
 ## Key Components
 
