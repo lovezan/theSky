@@ -73,6 +73,7 @@ The API is integrated with a fallback mechanism to ensure the website functions 
 ├── package.json            # Project dependencies
 ├── postcss.config.mjs      # PostCSS configuration
 └── tailwind.config.ts      # Tailwind CSS configuration
+```
 
 ## Key Components
 
@@ -119,24 +120,24 @@ The website supports both light and dark modes with a seamless transition betwee
 ### Installation
 
 1. Clone the repository:
-   \`\`\`bash
+```bash
    git clone https://github.com/lovezan/theSky.git
    cd theskytrails
-   \`\`\`
+```
 
 2. Install dependencies:
-   \`\`\`bash
+```bash
    npm install
    # or
    yarn install
-   \`\`\`
+```
 
 3. Run the development server:
-   \`\`\`bash
+```bash
    npm run dev
    # or
    yarn dev
-   \`\`\`
+```
 
 4. Open [http://localhost:3000](http://localhost:3000) in your browser to see the result.
 
