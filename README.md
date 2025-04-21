@@ -169,7 +169,7 @@ The website supports both light and dark modes with a seamless transition betwee
 ### Prerequisites
 
 - Node.js 18.x or higher
-- npm or yarn
+- pnpm or yarn
 
 ### Installation
 
@@ -181,6 +181,8 @@ The website supports both light and dark modes with a seamless transition betwee
 
 2. Install dependencies:
 ```bash
+   pnpm install
+   # or
    npm install
    # or
    yarn install
@@ -188,7 +190,9 @@ The website supports both light and dark modes with a seamless transition betwee
 
 3. Run the development server:
 ```bash
-   npm run dev
+   pnpm run dev
+   # or
+   npm install
    # or
    yarn dev
 ```
