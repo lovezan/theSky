@@ -9,7 +9,7 @@ const inter = Inter({ subsets: ["latin"] })
 export const metadata: Metadata = {
   title: "theskytrails - Country Explorer",
   description: "Discover the world through our travel blog powered by country data",
-  generator: 'v0.dev'
+  
 }
 
 export default function RootLayout({
