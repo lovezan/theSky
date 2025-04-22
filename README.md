@@ -18,6 +18,19 @@ theskytrails is a modern, interactive travel blog and country information platfo
 - **Responsive Design**: Optimized for all devices from mobile to desktop
 - **Blog Platform**: Read and comment on travel articles and guides
 - **First-visit Animation**: Engaging loading animation for first-time visitors
+- **Weather Widget**: Real-time weather information for each country  
+- **Currency Converter**: Instantly convert between major global currencies  
+- **Language Translator**: Translate basic phrases between local and global languages  
+- **Travel Planner**: Create and manage custom travel itineraries  
+- **User Profile System**: Personalize your experience with user profiles  
+- **Social Sharing Tools**: Share blog posts and countries on social media  
+- **Enhanced Hero Section**: Eye-catching landing visuals with dynamic headlines  
+- **Typewriter Effect**: Animated intro text to engage users  
+- **Interactive Map**: Explore countries and regions with zoomable, clickable maps  
+- 
+- ## Features
+
+
 
 ## Authentication
 
@@ -169,7 +182,7 @@ The website supports both light and dark modes with a seamless transition betwee
 ### Prerequisites
 
 - Node.js 18.x or higher
-- npm or yarn
+- pnpm or yarn
 
 ### Installation
 
@@ -181,6 +194,8 @@ The website supports both light and dark modes with a seamless transition betwee
 
 2. Install dependencies:
 ```bash
+   pnpm install
+   # or
    npm install
    # or
    yarn install
@@ -188,7 +203,9 @@ The website supports both light and dark modes with a seamless transition betwee
 
 3. Run the development server:
 ```bash
-   npm run dev
+   pnpm run dev
+   # or
+   npm install
    # or
    yarn dev
 ```
@@ -206,11 +223,15 @@ The project is configured for easy deployment on Vercel:
 
 ## Future Enhancements
 
-- Saved favorites and trip planning features
-- Multi-language support
-- Interactive maps for each country
-- Travel booking integration
-- User-generated content and reviews
+- **AI-Powered Travel Assistant**: Personalized travel recommendations and itinerary planning using AI  
+- **Voice Search Integration**: Allow users to search countries, blogs, and guides using voice commands  
+- **Smart Recommendations**: AI-based suggestions for destinations, blogs, and travel tips based on user behavior  
+- **Saved Favorites and Trip Planning**: Bookmark countries, save blogs, and create detailed travel plans  
+- **Multi-language Support**: Offer the platform in multiple languages for global accessibility  
+- **Interactive Country Maps**: Zoomable maps with POIs, highlights, and user annotations  
+- **Travel Booking Integration**: Connect with booking services for flights, hotels, and experiences  
+- **User-Generated Content & Reviews**: Allow travelers to share experiences, photos, and ratings  
+
 
 ## License
 
