@@ -55,7 +55,7 @@ export default function AIChatInterface() {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer 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`,
+          Authorization: `Bearer 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`,
           "HTTP-Referer": window.location.origin,
           "X-Title": "AI Chat Interface",
         },
