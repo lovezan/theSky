@@ -7,6 +7,7 @@ import { useEffect, useState } from "react"
 import AdvancedGlobe from "@/components/advanced-globe"
 import { fetchCountries } from "@/lib/api"
 import { TypewriterEffect } from "@/components/ui/typewriter-effect"
+import Globe from "./globe"
 
 export default function EnhancedHero() {
   const [countries, setCountries] = useState([])
@@ -149,7 +150,9 @@ export default function EnhancedHero() {
             transition={{ duration: 1, delay: 0.2 }}
             className="relative flex justify-center"
           >
-            <AdvancedGlobe countries={countries} />
+            {/* <AdvancedGlobe countries={countries} /> */}
+                        <Globe />
+            
           </motion.div>
         </div>
       </div>
